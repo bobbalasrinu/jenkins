@@ -9,32 +9,52 @@ pipeline {
     stages {
         stage('vcs'){
             steps{
-                 mail subject: 'Build Started', 
-                body: 'Build Started', 
-                to: 'bsrinivas@gmail.com' 
+                
                 git branch:"${params.branch_build}", url: 'https://github.com/bobbalasrinu/jenkins.git'
             }
         }
-        stage('build') {
-            steps{
-                sh 'export PATH="/usr/lib/jvm/java-8-openjdk-amd64/bin:$PATH" && mvn clean package'
+
+         stage ('Artifactory configuration') {
+            steps {
+                rtServer (
+                    id: "ARTIFACT",
+                    url: "https://mvnartifactory.jfrog.io/",
+                    credentialsId: "jenkins"
+                )
+
+                rtMavenDeployer (
+                    id: "MAVEN_DEPLOYER",
+                    serverId: "ARTIFACT",
+                    releaseRepo: 'jenkins-libs-release-local',
+                    snapshotRepo: 'jenkins-libs-snapshot-local'
+                )
+
+                rtMavenResolver (
+                    id: "MAVEN_RESOLVER",
+                    serverId: "ARTIFACT",
+                    releaseRepo: 'jenkins-libs-release-local',
+                    snapshotRepo: 'jenkins-libs-snapshot-local'
+                )
             }
-        post {
-        always {
-            echo 'Job completed'
-            mail subject: 'Build Completed', 
-                  body: 'Build Completed', 
-                  to: 'bsrinivas@gmail.com'
         }
-        failure {
-            mail subject: 'Build Failed', 
-                  body: 'Build Failed', 
-                  to: 'bsrinivas@gmail.com' 
+
+        stage ('Exec Maven') {
+            steps {
+                rtMavenRun (
+                    tool: MVN, // Tool name from Jenkins configuration
+                    pom: 'pom.xml',
+                    goals: 'clean install',
+                    deployerId: "MAVEN_DEPLOYER",
+                    resolverId: "MAVEN_RESOLVER"
+                )
+            }
         }
-        success {
-            junit '**/surefire-reports/*.xml'
-        }
-    } 
-  }
+
+        stage ('Publish build info') {
+            steps {
+                rtPublishBuildInfo (
+                    serverId: "ARTIFACT"
+                )
+            }
     }
 }
