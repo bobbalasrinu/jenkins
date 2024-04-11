@@ -2,7 +2,7 @@ pipeline {
     agent { label 'JDK8-MVN'}
     parameters{
         choice(name:'branch_build', choices:['main','master'], description: 'branch to build')
-        strings(name:'mvn_goal', defaultValue:'clean package', description: 'maven goal')
+        string(name:'mvn_goal', defaultValue:'clean package', description: 'maven goal')
 
     }
     stages {
