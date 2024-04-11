@@ -17,7 +17,7 @@ pipeline {
         }
         stage('build') {
             steps{
-                sh 'export PATH="/usr/lib/jvm/java-8-openjdk-amd64/bin:$PATH" && mvn clean package'
+                sh 'export PATH="/usr/lib/jvm/java-8-openjdk-amd64/bin:$PATH" && mvn lean package'
             }
         post {
         always {
@@ -34,7 +34,7 @@ pipeline {
         success {
             junit '**/surefire-reports/*.xml'
         }
-     } 
+    } 
   }
     }
 }
