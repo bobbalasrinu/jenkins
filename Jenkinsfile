@@ -1,19 +1,15 @@
 pipeline {
     agent { label 'JDK8-MVN'}
-    parameters{
-        choice(name:'branch_build', choices:['main','master'], description: 'branch to build')
-    }
+    
      options { 
         timeout(time: 1, unit: 'HOURS')
      }
-    triggers {
-        pollSCM('* * * * *')
-    }
+    
     stages {
         stage('vcs'){
             steps{
                 
-                git branch:"${params.branch_build}", url: 'https://github.com/bobbalasrinu/jenkins.git'
+                git branch:'main', url: 'https://github.com/bobbalasrinu/jenkins.git'
             }
         }
 
@@ -34,7 +30,7 @@ pipeline {
 
                 rtMavenResolver (
                     id: "MAVEN_RESOLVER",
-                    serverId: "ARTIFACT",
+                    serverId: "AARTIFACT",
                     releaseRepo: 'jenkins-libs-release-local',
                     snapshotRepo: 'jenkins-libs-snapshot-local'
                 )
