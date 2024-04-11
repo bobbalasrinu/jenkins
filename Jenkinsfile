@@ -19,7 +19,7 @@ pipeline {
                 rtServer (
                     id: "ARTIFACT",
                     url: "https://mvnartifactory.jfrog.io/",
-                    credentialsId: "jenkins"
+                    credentialsId: "ARTIFACT"
                 )
 
                 rtMavenDeployer (
