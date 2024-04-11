@@ -9,10 +9,14 @@ pipeline {
                 git branch:"${params.branch_build}", url: 'https://github.com/bobbalasrinu/jenkins.git'
             }
         }
-        stage('build') {
+        stage('path') {
             steps{
                 sh 'export PATH="/usr/lib/jvm/java-8-openjdk-amd64/bin:$PATH"'
-                sh '/usr/share/maven/bin/mvn package'
+            }
+        }
+        stage('build') {
+            steps{
+                sh 'mvn package'
             }
         }
         stage('archive artifacts') {
