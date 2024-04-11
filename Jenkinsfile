@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('vcs'){
             step{
-                git branch:'main', url: 'https://github.com/bobbalasrinu/jen_pipe.git'
+                git branch:'main', url: 'https://github.com/bobbalasrinu/jenkins.git'
             }
         }
         stage('build') {
