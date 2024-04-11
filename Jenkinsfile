@@ -12,7 +12,7 @@ pipeline {
         stage('build') {
             steps{
                 sh 'export PATH="/usr/lib/jvm/java-8-openjdk-amd64/bin:$PATH"'
-                sh '/usr/share/maven/bin/mvn clean package'
+                sh '/usr/share/maven/bin/mvn package'
             }
         }
         stage('archive artifacts') {
