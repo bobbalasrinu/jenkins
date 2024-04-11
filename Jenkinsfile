@@ -56,5 +56,6 @@ pipeline {
                     serverId: "ARTIFACT"
                 )
             }
+        }
     }
 }
