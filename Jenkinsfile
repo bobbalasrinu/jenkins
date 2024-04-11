@@ -1,48 +1,53 @@
 pipeline {
-    agent { label 'JDK8-MVN' }
-    options {
-        timeout(time: 30, unit: 'MINUTES')
-    }
-    triggers {
-        pollSCM('* * * * *')
-    }
-    tools {
-        jdk 'JDK8'
-    }
+    agent {label 'JDK8-MVN'}
     stages {
-        stage('vcs') {
+        stage ('Clone') {
             steps {
-                git url: 'git@github.com:bobbalasrinu/jenkins.git',
-                    branch: 'main'
+                git branch: 'main', url: "git@github.com:bobbalasrinu/jenkins.git"
             }
         }
-        stage('build and package') {
+
+        stage ('Artifactory configuration') {
             steps {
-                 rtMavenDeployer (
-                    id: "SPC_DEPLOYER",
+                rtServer (
+                    id: "ARTIFACT",
+                    url: 'https://mvnartifactory.jfrog.io/',
+                    credentialsId: "ARTIFACT"
+                )
+
+                rtMavenDeployer (
+                    id: "MAVEN_DEPLOYER",
+                    serverId: "ARTIFACT",
+                    releaseRepo: ARTIFACTORY_LOCAL_RELEASE_REPO,
+                    snapshotRepo: ARTIFACTORY_LOCAL_SNAPSHOT_REPO
+                )
+
+                rtMavenResolver (
+                    id: "MAVEN_RESOLVER",
                     serverId: "ARTIFACT",
                     releaseRepo: 'jenkins-libs-release-local',
-                    snapshotRepo: 'jenkins-libs-snapshot-local/'
+                    snapshotRepo: 'jenkins-libs-snapshot-local'
                 )
+            }
+        }
+
+        stage ('Exec Maven') {
+            steps {
                 rtMavenRun (
                     tool: 'MVN', // Tool name from Jenkins configuration
                     pom: 'pom.xml',
                     goals: 'clean install',
-                    deployerId: "SPC_DEPLOYER"
-                    //,
-                    //buildName: "${JOB_NAME}",
-                    //buildNumber: "${BUILD_ID}"
+                    deployerId: "MAVEN_DEPLOYER"
                 )
+            }
+        }
+
+        stage ('Publish build info') {
+            steps {
                 rtPublishBuildInfo (
                     serverId: "ARTIFACT"
                 )
             }
         }
-        stage('reporting') {
-            steps {
-                junit testResults: '**/target/surefire-reports/TEST-*.xml'
-            }
-        }
     }
-
 }
