@@ -9,17 +9,12 @@ pipeline {
                 git branch:"${params.branch_build}", url: 'https://github.com/bobbalasrinu/jenkins.git'
             }
         }
-        stage('path') {
-            steps{
-                sh 'export PATH="/usr/lib/jvm/java-8-openjdk-amd64/bin:$PATH"'
-            }
-        }
         stage('build') {
             steps{
-                sh 'mvn package'
+                sh 'export PATH="/usr/lib/jvm/java-8-openjdk-amd64/bin:$PATH" && mvn clean package'
             }
         }
-        stage('archive artifacts') {
+                stage('archive artifacts') {
             steps{
                 junit '**/surefire-reports/*.xml'
             }
