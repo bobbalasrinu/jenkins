@@ -2,6 +2,7 @@ pipeline {
     agent { label 'JDK8-MVN'}
     parameters{
         choice(name:'branch_build', choices:['main','master'], description: 'branch to build')
+        strings(name:'mvn_goal', defaultvalus:'clean package' description: 'maven goal')
 
     }
     stages {
@@ -12,7 +13,8 @@ pipeline {
         }
         stage('build') {
             steps{
-                sh 'export PATH="/usr/lib/jvm/java-8-openjdk-amd64/bin:$PATH" && mvn package'
+                sh 'export PATH="/usr/lib/jvm/java-8-openjdk-amd64/bin:$PATH"'
+                sh 'mvn "${params.mvn_goal}"'
             }
         }
         stage('archive artifacts') {
