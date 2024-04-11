@@ -1,9 +1,13 @@
 pipeline {
     agent { label 'JDK8-MVN'}
+    parameters{
+        choice(name:'branch_build', choices:['main','master'], description: 'branch to build')
+
+    }
     stages {
         stage('vcs'){
             steps{
-                git branch:'main', url: 'https://github.com/bobbalasrinu/jenkins.git'
+                git branch:"${params.branch_build}", url: 'https://github.com/bobbalasrinu/jenkins.git'
             }
         }
         stage('build') {
