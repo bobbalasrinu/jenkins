@@ -3,6 +3,9 @@ pipeline {
     parameters{
         choice(name:'branch_build', choices:['main','master'], description: 'branch to build')
     }
+     options { 
+        timeout(time: 1, unit: 'HOURS')
+     }
     triggers {
         pollSCM('* * * * *')
     }
