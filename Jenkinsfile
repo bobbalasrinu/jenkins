@@ -3,18 +3,13 @@ pipeline {
     stages {
         stage ('Clone') {
             steps {
-                git branch: 'main', url: 'git@github.com:bobbalasrinu/jenkins.git'
+                git branch: 'main', url: "https://github.com/bobbalasrinu/jenkins.git"
             }
         }
 
         stage ('Artifactory configuration') {
             steps {
-                rtServer (
-                    id: "ARTIFACT",
-                    url: 'https://mvnartifactory.jfrog.io/',
-                    credentialsId: "ARTIFACT"
-                )
-
+            
                 rtMavenDeployer (
                     id: "MAVEN_DEPLOYER",
                     serverId: "ARTIFACT",
@@ -22,12 +17,6 @@ pipeline {
                     snapshotRepo: 'jenkins-libs-snapshot-local'
                 )
 
-                rtMavenResolver (
-                    id: "MAVEN_RESOLVER",
-                    serverId: "ARTIFACT",
-                    releaseRepo: 'jenkins-libs-release-local',
-                    snapshotRepo: 'jenkins-libs-snapshot-local'
-                )
             }
         }
 
