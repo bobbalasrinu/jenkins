@@ -1,5 +1,5 @@
 pipeline {
-    agent { lable 'JKD8-MVN'}
+    agent { label 'JKD8-MVN'}
     stages {
         stage('vcs'){
             steps{
