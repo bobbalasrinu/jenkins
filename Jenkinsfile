@@ -19,8 +19,7 @@ pipeline {
             steps{
                 sh 'export PATH="/usr/lib/jvm/java-8-openjdk-amd64/bin:$PATH" && mvn clean package'
             }
-        }
-         post {
+        post {
         always {
             echo 'Job completed'
             mail subject: 'Build Completed', 
@@ -35,6 +34,7 @@ pipeline {
         success {
             junit '**/surefire-reports/*.xml'
         }
+     } 
+  }
     }
-}
 }
