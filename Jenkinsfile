@@ -14,7 +14,7 @@ pipeline {
         stage('build') {
             steps{
                 sh 'export PATH="/usr/lib/jvm/java-8-openjdk-amd64/bin:$PATH"'
-                sh 'mvn "${params.mvn_goal}"'
+                sh "mvn ${params.mvn_goal}"
             }
         }
         stage('archive artifacts') {
