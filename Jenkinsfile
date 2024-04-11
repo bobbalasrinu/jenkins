@@ -2,7 +2,7 @@ pipeline {
     agent { lable 'JKD8-MVN'}
     stages {
         stage('vcs'){
-            step{
+            steps{
                 git branch:'main', url: 'https://github.com/bobbalasrinu/jenkins.git'
             }
         }
