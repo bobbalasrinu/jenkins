@@ -1,5 +1,14 @@
 pipeline {
     agent {label 'JDK8-MVN'}
+    options {
+        timeout(time: 30, unit: 'MINUTES')
+    }
+    triggers {
+        pollSCM('* * * * *')
+    }
+    tools {
+        jdk 'JDK8'
+    }
     stages {
         stage ('Clone') {
             steps {
