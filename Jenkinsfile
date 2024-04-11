@@ -18,8 +18,8 @@ pipeline {
                 rtMavenDeployer (
                     id: "MAVEN_DEPLOYER",
                     serverId: "ARTIFACT",
-                    releaseRepo: ARTIFACTORY_LOCAL_RELEASE_REPO,
-                    snapshotRepo: ARTIFACTORY_LOCAL_SNAPSHOT_REPO
+                    releaseRepo: 'jenkins-libs-release-local',
+                    snapshotRepo: 'jenkins-libs-snapshot-local'
                 )
 
                 rtMavenResolver (
