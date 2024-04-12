@@ -18,10 +18,10 @@ pipeline {
 
         stage ('Artifactory configuration') {
             steps {
-            
+                sh 'export PATH="/usr/lib/jvm/java-8-openjdk-amd64/bin:$PATH"'
                 rtMavenDeployer (
                     id: "MAVEN_DEPLOYER",
-                    serverId: "ARTIFACT",
+                    serverId: "JFROG_APR",
                     releaseRepo: 'jenkins-libs-release-local',
                     snapshotRepo: 'jenkins-libs-snapshot-local'
                 )
@@ -32,7 +32,7 @@ pipeline {
         stage ('Exec Maven') {
             steps {
                 rtMavenRun (
-                    tool: 'MVN', // Tool name from Jenkins configuration
+                    tool: 'MVN', 
                     pom: 'pom.xml',
                     goals: 'clean package',
                     deployerId: "MAVEN_DEPLOYER"
@@ -43,7 +43,7 @@ pipeline {
         stage ('Publish build info') {
             steps {
                 rtPublishBuildInfo (
-                    serverId: "ARTIFACT"
+                    serverId: "JFROG_APR"
                 )
             }
         }
