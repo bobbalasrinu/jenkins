@@ -18,7 +18,6 @@ pipeline {
 
         stage ('Artifactory configuration') {
             steps {
-                sh 'export PATH="/usr/lib/jvm/java-8-openjdk-amd64/bin:$PATH"'
                 rtMavenDeployer (
                     id: "MAVEN_DEPLOYER",
                     serverId: "JFROG_APR",
